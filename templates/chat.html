@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <title>Goodiebag Experiments</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    
+    <div class="container">
+      <div class="row">
+      <div class="col-sm-6" style="background-color:yellow;">
+        <h2> Video Feed </h2>
+        <img src="/static/1.jpg">
+      </div>
+
+      <div class="col-sm-6" style="background-color:pink;">
+        <h2> Chat Window </h2>
+        <div class="chat_holder"></div>
+        <form action="" method="POST">
+          <input type="text" class="commands" placeholder="Commands"/>
+          <input type="submit"/>
+        </form>
+      </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var socket = io.connect('http://' + document.domain + ':' + location.port);
+      socket.on('connect', function(){
+        socket.emit('connect_event',{
+          data: 'User connected to Server'
+        })
+
+        var form = $('form').on('submit', function(e){
+          e.preventDefault()
+          let user_command = $('input.commands').val()
+          socket.emit('chat_event', {
+            command : user_command
+          })
+          $('input.commands').val('').focus()
+        })
+      })
+
+      socket.on('server_response_event', function(msg){
+        console.log(msg)
+        $('div.chat_holder').append('<div><b style="color: #000">'+'['+msg.client_ip+'] : '+'</b> '+msg.command+'</div>')
+      })
+    </script>
+
+  </body>
+  </html>
+
