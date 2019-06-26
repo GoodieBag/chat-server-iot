@@ -1,57 +1,202 @@
 <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <title>Goodiebag Experiments</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-  </head>
-  <body>
-    
-    <div class="container">
-      <div class="row">
-      <div class="col-sm-6" style="background-color:yellow;">
-        <h2> Video Feed </h2>
-        <img src="/static/1.jpg">
-      </div>
+<html lang="en">
+    <head>
+        <title>Goodiebag Experiments</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" type="image/png" href="">
 
-      <div class="col-sm-6" style="background-color:pink;">
-        <h2> Chat Window </h2>
-        <div class="chat_holder"></div>
-        <form action="" method="POST">
-          <input type="text" class="commands" placeholder="Commands"/>
-          <input type="submit"/>
-        </form>
-      </div>
-      </div>
-    </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+                integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+                crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+                integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+                crossorigin="anonymous"></script>
+        <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">-->
+
+        <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">-->
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+        <link rel="stylesheet"
+              href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400italic,600,700%7COpen+Sans:300,400,400italic,600,700">
+    </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+
+    <style>
+        .selector-for-some-widget {
+            box-sizing: content-box;
+        }
+
+        body {
+            background-color: #F5F5F5;
+        }
+
+        .block-content {
+            background-color: #ffffff;
+        }
+
+        .banner-header {
+            background-color: #f5f5f5;
+        }
+
+        .card {
+            border: none !important;
+        }
+
+        .navbar-default {
+            background-color: #F8F8F8;
+            border-color: #E7E7E7;
+        }
+
+        .jqx-widget
+        {
+            font-family: Sans;
+        }
+
+        #partitioned {
+          padding-left: 15px;
+          letter-spacing: 42px;
+          border: 0;
+          background-image: linear-gradient(to left, black 70%, rgba(255, 255, 255, 0) 0%);
+          background-position: bottom;
+          background-size: 50px 1px;
+          background-repeat: repeat-x;
+          background-position-x: 35px;
+          width: 220px;
+          min-width:220px;
+        }
+
+        #divInner{
+          left: 0;
+          position: sticky;
+        }
+
+        #divOuter{
+          width:100%;
+          overflow:hidden
+        }
+
+
+        label{
+            display: block;
+            padding-top: 5px;
+            padding-bottom: 0px;
+            margin-bottom: 0px;
+        }
+
+        .text {
+            font-weight:bold;
+            text-align: left;
+            height: 60px;
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .helpLineText {
+            font-weight:bold;
+            text-align: right;
+            height: 40px;
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+
+    </style>
+
 
     <script type="text/javascript">
-      var socket = io.connect('http://' + document.domain + ':' + location.port);
-      socket.on('connect', function(){
-        socket.emit('connect_event',{
-          data: 'User connected to Server'
+
+        $(document).ready(function () {
+
+        });
+
+        function shareOverrideOGMeta(overrideLink, overrideTitle, overrideDescription, overrideImage)
+        {
+
+            if(overrideImage == ''){
+                overrideImage = '';
+            }
+
+           document.title = overrideTitle;
+           var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+           link.type = 'image/x-icon';
+           link.rel = 'shortcut icon';
+           link.href = overrideImage;
+           document.getElementsByTagName('head')[0].appendChild(link);
+
+           $('head').append('<meta name="description" content="'+overrideDescription+'" />');
+	       $('head').append('<meta property="og:url" content="'+overrideLink+'" />');
+    	   $('head').append('<meta property="og:title" content="'+overrideTitle+'" />');
+	       $('head').append('<meta property="og:description" content="'+overrideDescription+'" />');
+    	   $('head').append('<meta property="og:image" content="'+overrideImage+'" />');
+        }
+
+
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        socket.on('connect', function(){
+            socket.emit('connect_event',{
+                data: 'User connected to Server'
+            })
+
+            var form = $('form').on('submit', function(e){
+                e.preventDefault()
+                let user_command = $('input.commands').val()
+                socket.emit('chat_event', {
+                    command : user_command
+                })
+                $('input.commands').val('').focus()
+            })
         })
 
-        var form = $('form').on('submit', function(e){
-          e.preventDefault()
-          let user_command = $('input.commands').val()
-          socket.emit('chat_event', {
-            command : user_command
-          })
-          $('input.commands').val('').focus()
+        socket.on('server_response_event', function(msg){
+            console.log(msg)
+            $('div.chat_holder').append('<div><b style="color: #000">'+'['+msg.client_ip+'] : '+'</b> '+msg.command+'</div>')
         })
-      })
 
-      socket.on('server_response_event', function(msg){
-        console.log(msg)
-        $('div.chat_holder').append('<div><b style="color: #000">'+'['+msg.client_ip+'] : '+'</b> '+msg.command+'</div>')
-      })
     </script>
 
-  </body>
-  </html>
+    <div>
+        <div class="container"><br></div>
+            <div class="container">
+                <div class="block">
+                    <div class="block-content">
+                        <div class="row col-md-12">
 
+                            <div class="col-lg-7 col-sm-7" style="background-color:#633B9B;">
+                                <h2 style="color: white;"> Video Window </h2>
+                                <img alt="ChatServerIOT"
+                                     src="https://cdn.dribbble.com/users/1467568/screenshots/3439069/videochat4.gif" width="100%"
+                                     align="middle">
+                                <br>
+                                <br>
+                            </div>
+
+                            <div class="col-lg-5 col-sm-5 " style="background-color:#000000;">
+                                <h2 style="color: red;"> Chat Window </h2>
+                                <div class="chat_holder"></div>
+                                <form action="" method="POST">
+                                    <div class="input-group">
+                                        <input type="text" class="commands form-control"
+                                               placeholder="Keep your crap here and hit...!"/>
+                                        <span class="input-group-btn">
+                                                    <button name="send" class="btn btn-primary" type="submit">Hit</button>
+                                                </span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
