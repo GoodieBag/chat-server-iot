@@ -10,6 +10,10 @@ CLIENT_IP = "0.0.0.0"
 # list of valid user commands
 VALID_USER_COMMANDS = ['left', 'right', 'up', 'down']
 
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'sennagang_pkpap'
+socketio = SocketIO(app)
+
 
 def handle_user_command(cmd):
     """Function to handle valid user chat commands. Based on user commands, drive bot in that direction"""
@@ -84,11 +88,5 @@ if __name__ == '__main__':
     print "Starting Bot..."
     bot = bot_init()
     time.sleep(1)
-
-    """Initialize web app"""
-    print "Starting App..."
-    app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'sennagang_pkpap'
-    socketio = SocketIO(app)
 
     socketio.run(app, host='0.0.0.0', port=80, debug=True)
