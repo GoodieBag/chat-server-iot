@@ -104,6 +104,11 @@
             vertical-align: middle;
         }
 
+        .scrollable {
+            height: 80%;
+            overflow-y: auto;
+        }
+
     </style>
 	
 	<script>
@@ -150,7 +155,7 @@
 					</div>
 					<div class="col-lg-5 col-sm-5 " style="background-color:#000000;">
 						<h2 style="color: red;"> Chat Window </h2>
-						<div class="chat_holder"></div>
+						<div class="chat_holder scrollable"></div>
 							<form action="" method="POST">
 								<div class="input-group">
 									<input type="text" class="commands form-control" placeholder="Keep your crap here and hit...!"/>
