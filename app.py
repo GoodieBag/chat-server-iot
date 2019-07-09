@@ -16,7 +16,10 @@ socketio = SocketIO(app)
 
 
 def handle_user_command(cmd):
-    """Function to handle valid user chat commands. Based on user commands, drive bot in that direction"""
+    """ Function to handle valid user chat commands. Based on user commands, drive bot in that direction
+        returns -1 for invalid command
+                 0 for valid command
+    """
 
     print "User command is : {}".format(cmd)
     cmd = str(cmd).lower()
@@ -35,20 +38,22 @@ def handle_user_command(cmd):
         bot.turn_right()
     else:
         print "Invalid command : {}".format(cmd)
+        return -1
 
     print "Executed command!"
+    return 0
 
 
 @app.route('/')
 def chat():
-    """Function to render the initial screen of this app. Screen consists a chat window and a video feed window"""
+    """ Function to render the initial screen of this app. Screen consists a chat window and a video feed window """
 
     return render_template('chat.html')
 
 
 @socketio.on('connect_event')
 def handle_connect_event(json, methods=['GET', 'POST']):
-    """Function to handle initial client connection"""
+    """ Function to handle initial client connection """
 
     global CLIENT_IP
     CLIENT_IP = request.remote_addr
@@ -57,8 +62,8 @@ def handle_connect_event(json, methods=['GET', 'POST']):
 
 @socketio.on('chat_event')
 def handle_chat_event(json, methods=['GET', 'POST']):
-    """Function to handle chat events. If valid commands are entered, commands will be displayed in the chat window
-       Also calls the function to move bot
+    """ Function to handle chat events. If valid commands are entered, commands will be displayed in the chat window
+        Also calls the function to move bot
     """
     global CLIENT_IP
     print "Client : {}, Received data : {}".format(CLIENT_IP, json)
